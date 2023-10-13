@@ -28,7 +28,7 @@ exports.register = catchAsync(async (req, res) => {
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7,
-    sameSite:"none"
+    sameSite: "none",
   });
   res.status(200).json({
     message: "User created successfully",
@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
     return res.status(401).json({ message: "incorrect password" });
   }
   let token = await user.generateAuthToken();
-  res.cookie('jwt',token,)
+  res.cookie("jwt", token);
   res.status(200).json({
     message: "Auth successful",
     status: "success",
@@ -193,7 +193,6 @@ exports.resendVerificationEmail = async (req, res) => {
     user.verifyToken = uuidv4();
     user.tokenExpriesIn = Date.now() + 10 * 60 * 1000;
     await user.save();
-   
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -214,7 +213,6 @@ exports.forgotPassword = async (req, res) => {
     user.resetToken = uuidv4();
     user.tokenExpriesIn = Date.now() + 10 * 60 * 1000;
     await user.save();
-   
   } catch (error) {
     res.status(400).json({
       error,
@@ -253,8 +251,9 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.checkLoggedIn = async (req, res) => {
+  console.log(req.headers.authorization);
   try {
-    const token = req.cookies.jwt;
+    const token = req.cookies.jwt || req.headers.authorization
     if (!token) {
       return res.status(401).json({
         message: "Unauthorized",
@@ -268,7 +267,7 @@ exports.checkLoggedIn = async (req, res) => {
           error: "User not found",
         });
       }
-      
+
       res.status(200).json({
         message: "User logged in",
         user,
