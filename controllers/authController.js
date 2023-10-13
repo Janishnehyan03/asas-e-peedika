@@ -93,7 +93,7 @@ exports.verifyToken = async (req, res, next) => {
 // verify admin token for admin routes
 exports.verifyAdminToken = async (req, res, next) => {
   try {
-    const authToken = req.cookies.jwt;
+    const authToken = req.cookies.jwt || req.headers.authorization;
     if (!authToken) {
       return res.status(401).json({
         message: "No token provided",
@@ -251,9 +251,8 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.checkLoggedIn = async (req, res) => {
-  console.log(req.headers.authorization);
   try {
-    const token = req.cookies.jwt || req.headers.authorization
+    const token = req.cookies.jwt || req.headers.authorization;
     if (!token) {
       return res.status(401).json({
         message: "Unauthorized",
