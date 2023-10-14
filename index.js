@@ -13,15 +13,9 @@ const reviewRoutes = require("./routes/review.js");
 const categoryRoutes = require("./routes/category.js");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+app.use(cors({ origin: true, credentials: true }));
 
 dotenv.config();
 app.use(morgan("dev"));
@@ -38,9 +32,9 @@ mongoose.connect(process.env.MONGO_URI, (err) => {
 
 app.use(bodyParser.json());
 // console production or development
-app.get('/',(req,res)=>{
-  res.status(200).json({message:"Hello"})
-})
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Hello" });
+});
 
 // routes
 app.use("/api/v1/products", productRoutes);
@@ -53,7 +47,7 @@ app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 
 
-
-app.listen(5000, () => {
-  console.log("Server started at port 5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

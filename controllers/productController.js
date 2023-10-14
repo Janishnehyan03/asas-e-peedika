@@ -42,7 +42,19 @@ exports.getAllProducts = async (req, res) => {
       products = products.sort((a, b) => a.price - b.price);
     } else if (query.hightoLow) {
       products = products.sort((a, b) => b.price - a.price);
-    }
+    } else if (query.aToz) {
+      products = products.sort((a, b) => {
+        const titleA = a.title.toUpperCase();
+        const titleB = b.title.toUpperCase();
+        if (titleA < titleB) {
+          return -1;
+        }
+        if (titleA > titleB) {
+          return 1;
+        }
+        return 0;
+      });
+    } 
 
     // Limit the number of results if query.limit is provided
     if (query.limit) {
@@ -51,7 +63,7 @@ exports.getAllProducts = async (req, res) => {
     if (query.discount) {
       products = products.filter((product) => product.discount > 0);
     }
-    
+
     res.status(200).json({
       message: "Products fetched successfully",
       results: products.length,
